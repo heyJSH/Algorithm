@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -33,10 +35,10 @@ public class Main {
         }
 
         int count = 0; // 연결 요소의 개수 초기화
-        // DFS를 통해 연결 요소의 개수 구하기
+        // BFS를 통해 연결 요소의 개수 구하기
         for (int i = 1; i <= N; i++) {
-            if (!visited[i]) { // 방문하지 않은 정점부터 DFS 호출
-                dfs(i);
+            if (!visited[i]) { // 방문하지 않은 정점부터 BFS 호출
+                bfs(i);
                 count++; // 연결 요소 개수 증가
             }
         }
@@ -44,13 +46,20 @@ public class Main {
         System.out.println(count); // 연결 요소의 개수 출력
     }
 
-    // DFS 함수 정의
-    static void dfs(int v) {
-        visited[v] = true; // 현재 정점 방문 표시
-        // 현재 정점과 연결된 정점들에 대해 재귀적으로 DFS 호출
-        for (int next : adjList[v]) {
-            if (!visited[next]) {
-                dfs(next);
+    // BFS 함수 정의
+    static void bfs(int start) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(start); // 시작 정점을 큐에 추가
+        visited[start] = true; // 시작 정점 방문 표시
+
+        while (!queue.isEmpty()) {
+            int current = queue.poll(); // 큐에서 정점 추출
+            // 현재 정점과 연결된 정점들에 대해 처리
+            for (int next : adjList[current]) {
+                if (!visited[next]) { // 방문하지 않은 정점이라면
+                    queue.offer(next); // 큐에 추가
+                    visited[next] = true; // 방문 표시
+                }
             }
         }
     }
